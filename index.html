@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debounce</title>
+</head>
+<body>
+    <button type="button" style="height: 100px; margin: auto; cursor: pointer;">Order</button>
+</body>
+
+<script>
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Triển khai debounce
+    // Kĩ thuật Debounce: Khi mà bạn nén cái lò xo, khi nào bạn thả tay ra thì nó mới bung cái lò xo 
+    // Cú pháp của debounce: debounce(fn, delay)
+    // fn là 1 cái function gọi xuống backend, delay là trong vòng mấy giây mới kích hoạt sự kiện kể từ khi sự kiện đó được click
+
+    // const initApp = () => {
+    //     const button = document.querySelector('button');
+    //     // Cách 1 sau 2s ta mới cho phép thực hiện sự kiện clickOrder 1 lần
+    //     // button.addEventListener('click', debounce(clickOrder,2000));
+
+    //     // Cách 2 nếu ta ko áp dụng kĩ thuật debounce thì ta có thể làm như sau: Sau khi click button thì ta cho disable. Sau 2s thì ta sẽ cho cái nút enable lại
+    //     button.addEventListener('click', () => {
+    //         clickOrder();
+    //         button.disabled = true;
+    //         setTimeout(() => button.disabled = false, 2000);
+    //     });
+    // }
+
+    // const debounce = (fn, delay) => {
+    //     // timerId là giá trị nguyên do setTimeOut return về, để làm gì? => Để sử dụng để đưa vào clearTimeout() nhằm hủy bỏ setTimeOut() tương ứng
+    //     delay = delay || 0;
+    //     let timerId;
+    //     console.log("TimerId Immediate Load:::", timerId);
+    //     return () => {
+    //         console.log(`TimerID Previous At:::${timerId}`);
+    //         // Nếu mà timerId này tồn tại tức là chúng ta đã kích hoạt sự kiện rồi thì chúng ta sẽ xóa cái timerId đi
+    //         if(timerId){
+    //             clearInterval(timerId);
+    //             timerId = null;
+    //         }
+    //         // Nếu mà timerId này chưa tồn tại thì chúng ta sẽ setTimeout cho nó đồng thời đưa fn mà chúng ta muốn gọi vào
+    //         timerId = setTimeout(() => {
+    //             fn();
+    //         }, delay);
+    //     }
+    // }
+
+    // const clickOrder = () => console.log('Order');
+
+    // document.addEventListener('DOMContentLoaded', initApp);
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    // Triển khai throttle
+    // Kĩ thuật throttle: Khi mà chúng ta gõ văn bản, thì sau bao nhiêu giây chỉ định thì hệ thống tự động lưu cho chúng ta, giúp ích nhiều cho chúng ta đề
+    // phòng trong trường hợp mất điện, hay gặp sứ cố gì đó.... thì chúng ta sẽ không mất đi dữ liệu mà chúng ta vừa gõ vì cứ tự động 10s là save sau 1 lần
+    // Cú pháp của throttle: throttle(fn, delay)
+    // fn là 1 cái function gọi xuống backend, delay là trong vòng mấy giây thì lưu lại dữ liệu đó
+
+    const initApp = () => {
+        const button = document.querySelector('button');
+        // Cách 2s nó hiên 1 lần
+        button.addEventListener('click', throttle(clickOrder,2000));
+    }
+
+    const throttle = (fn, delay) => {
+        delay = delay || 0;
+
+        let last = 0; // Sự kiện cuối cùng mà chúng ta click
+        
+        return () => {
+            const now = new Date().getTime(); // Thời gian hiện tại khi mà chúng ta click vô
+            // Ví dụ từ 0 đến 3s mà người dùng click tại giây thứ 1,2 thì chúng ta ko làm gì cả. Nếu quá thì set lại cái last = thời gian hiện tại
+            if(now - last < delay){
+                return;
+            }
+            last = now;
+            fn();
+        }
+    }
+
+    const clickOrder = () => console.log('Order');
+
+    document.addEventListener('DOMContentLoaded', initApp);
+</script>
+
+</html>
